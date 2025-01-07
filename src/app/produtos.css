@@ -1,0 +1,192 @@
+.produtos-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    h1 {
+        font-size: 2.5em;
+        font-weight: 500;
+        margin: 1rem 0;
+    }
+}
+
+.filtro-box {
+    display: flex;
+    padding-right: 1rem;
+    gap: 0.5rem;
+    input {
+        text-decoration: none;
+        background-color: #f1f1f1;
+        padding: 0.75rem 0.5rem;
+        border-radius: 1rem;
+        border: solid 2px #000;
+    }
+    div {
+        padding: 0.75rem 2rem;
+        border-radius: 1rem;
+        background-color: #dcdcdc;
+    }
+    div:hover {
+        cursor: pointer;
+        background-color: #b7b7b7;
+        transition: 0.5s;
+    }
+}
+
+.produtos-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.produtos-header h1 {
+    text-align: center;
+    flex-grow: 1;
+    padding-left: 8rem;
+}
+
+.produtos-header h2 {
+    background-color: #00a400;
+    text-align: start;
+    margin-right: auto;
+    margin-left: 1rem;
+    color: white;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+}
+
+.produtos-header h2:hover {
+    transition: 0.25s;
+    background-color: #016401;
+    cursor: pointer;
+}
+
+.produto-box {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid #626262;
+    gap: 0.5rem;
+
+    .produto-header {
+        display: flex;
+        gap: 3rem;
+        align-items: center;
+        p {
+            color: #626262;
+            font-size: 0.8rem;
+        }
+        .produto-header-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .produto-header-edit {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.2rem;
+            border-radius: 0.5rem;
+            background-color: #3478ff;
+        }
+        .produto-header-edit:hover {
+            cursor: pointer;
+        }
+        .produto-header-delete {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.2rem;
+            border-radius: 0.5rem;
+            background-color: #fd3434;
+        }
+        .produto-header-delete:hover {
+            cursor: pointer;
+        }
+    }
+
+    .produto-body {
+        display: flex;
+        justify-content: space-between;
+        h2 {
+            font-weight: bold;
+            font-size: 1.25em;
+        }
+    }
+
+    .produto-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+
+.produtos-box {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.produto-modal {
+    z-index: 999;
+    position: absolute;
+    top: 35%;
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 1rem;
+    width: 20%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    .produto-modal-header {
+
+    }
+    .produto-modal-body {
+
+    }
+    .produto-modal-footer {
+        display: flex;
+        gap: 1rem;
+        justify-content: end;
+        .cancelar-button{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.5rem;
+            padding: 0.25rem 0;
+            width: 20%;
+            color: white;
+            background-color: red;
+        }
+        .cancelar-button:hover {
+            cursor: pointer;
+            background-color: #b60000;
+            transition: 0.5s;
+        }
+        .confirmar-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.5rem;
+            padding: 0.25rem 0;
+            width: 20%;
+            color: white;
+            background-color: #3478ff;
+        }
+        .confirmar-button:hover {
+            cursor: pointer;
+            background-color: #2859bb;
+            transition: 0.5s;
+        }
+    }
+}
+
+.baixo-estoque {
+    background-color: #FFA500;
+}

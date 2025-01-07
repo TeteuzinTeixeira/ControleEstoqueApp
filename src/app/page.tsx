@@ -1,101 +1,146 @@
+"use client";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Produto } from "@/entity/produto";
+import './produtos.css';
 import Image from "next/image";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import CadastrarProduto from "@/components/cadastrarProduto/cadastrarProduto";
+import Link from "next/link";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+export default function Produtos() {
+    const [produtos, setProdutos] = useState<Produto[]>([]);
+    const [modal, setModal] = useState<boolean>(false);
+    const [produtoSelecionado, setProdutoSelecionado] = useState<string | null>(null);
+    const [exibirCadastro, setExibirCadastro] = useState<boolean>(false);
+    const [filtro, setFiltro] = useState<string | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    const deleteProduto = (id: string) => {
+        axios.delete('http://localhost:8080/produtos', {
+            data: { id }
+        })
+            .then(() => {
+                setProdutos(prevProdutos => prevProdutos.filter(produto => produto.id !== id));
+                setModal(false);
+                toast.success("Produto excluído com sucesso!");
+            })
+            .catch(() => {
+                toast.error("Erro ao excluir o produto. Tente novamente.");
+            });
+    };
+
+    const enviarFiltro = (filtro: string) => {
+
+        axios.get<Produto[]>(`http://localhost:8080/produtos/nome?nome=${filtro}`)
+            .then(response => {
+                toast.success("Filtro realizado!");
+                setProdutos(response.data);
+            })
+            .catch(() => {
+                toast.error("Erro ao realizar filtro do produto");
+            });
+    }
+
+    useEffect(() => {
+        axios.get<Produto[]>('http://localhost:8080/produtos')
+            .then(response => {
+                setProdutos(response.data);
+            })
+            .catch(() => {
+                toast.error("Erro ao buscar produtos.");
+            });
+    }, []);
+
+    const handleCadastrarClick = () => {
+        setExibirCadastro(true);
+    };
+
+    const handleVoltarParaLista = () => {
+        setExibirCadastro(false);
+    };
+
+    if (exibirCadastro) {
+        return (
+        <div className="produtos-container">
+            <CadastrarProduto voltarParaLista={handleVoltarParaLista} />;
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        )
+    }
+
+    return (
+        <div className="produtos-container">
+            <ToastContainer position="top-right" autoClose={3000} />
+            <div className="produtos-header">
+                <h2 onClick={handleCadastrarClick} style={{ cursor: 'pointer' }}>Cadastrar +</h2>
+                <h1>Produtos</h1>
+                <div className="filtro-box">
+                    <input
+                        id="filtro-nome"
+                        type="text"
+                        placeholder="Digite o nome do produto"
+                        value={filtro}
+                        onChange={(e) => setFiltro(e.target.value)}/>
+                    <div className="filtro-button" onClick={() => enviarFiltro(filtro)}>Enviar</div>
+                </div>
+            </div>
+
+            <ul className="produtos-box">
+                {produtos.map((produto) => (
+                    <li
+                        key={produto.id}
+                        className={`produto-box ${produto.quantidade < 100 ? 'baixo-estoque' : ''}`} // Condicional para a classe 'baixo-estoque'
+                    >
+                        <div className="produto-header">
+                            <p>Id: {produto.id}</p>
+                            <div className="produto-header-buttons">
+                                <div className="produto-header-edit">
+                                    <Link href={`/${produto.id}`}>
+                                        <Image src="/edit.png" alt="edit" width={20} height={20}/>
+                                    </Link>
+                                </div>
+                                <div className="produto-header-delete"
+                                    onClick={() => {
+                                        setProdutoSelecionado(produto.id);
+                                        setModal(true);
+                                    }}>
+                                    <Image src="/delete.png" alt="delete" width={20} height={20}/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="produto-body">
+                            <h2>{produto.nome}</h2>
+                        </div>
+
+                        <div className="produto-footer">
+                            <p>R$ {produto.preco.toFixed(2)}</p>
+                            <p>Quantidade: {produto.quantidade}</p>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+
+            {modal &&
+                <div className="produto-modal">
+                    <div className="produto-modal-header">
+                        <h1>Excluir</h1>
+                    </div>
+                    <div className="produto-modal-body">
+                        <p>Confirmar exclusão?</p>
+                    </div>
+                    <div className="produto-modal-footer">
+                        <p className="cancelar-button" onClick={() => setModal(false)}>Cancelar</p>
+                        <p className="confirmar-button" onClick={() => {
+                            if (produtoSelecionado) {
+                                deleteProduto(produtoSelecionado);
+                            }
+                        }}>
+                            Confirmar
+                        </p>
+                    </div>
+                </div>
+            }
+        </div>
+    );
 }
