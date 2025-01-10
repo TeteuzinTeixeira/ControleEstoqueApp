@@ -42,7 +42,7 @@ export default function Produtos() {
             });
     }
 
-    useEffect(() => {
+    const getProdutos = () => {
         axios.get<Produto[]>('http://localhost:8080/produtos')
             .then(response => {
                 setProdutos(response.data);
@@ -50,6 +50,10 @@ export default function Produtos() {
             .catch(() => {
                 toast.error("Erro ao buscar produtos.");
             });
+    }
+
+    useEffect(() => {
+        getProdutos();
     }, []);
 
     const handleCadastrarClick = () => {
@@ -58,6 +62,7 @@ export default function Produtos() {
 
     const handleVoltarParaLista = () => {
         setExibirCadastro(false);
+        getProdutos();
     };
 
     if (exibirCadastro) {
