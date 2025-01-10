@@ -13,13 +13,20 @@ export default function CadastrarProduto({ voltarParaLista }: CadastrarProdutoPr
     const [preco, setPreco] = useState('');
     const [quantidade, setQuantidade] = useState('');
 
+    const formatarPreco = (valor: string) => {
+        if (!valor) return "R$ 0,00"; // Retorna um valor padrão para entradas vazias
+        const somenteNumeros = valor.replace(/\D/g, ""); // Remove caracteres não numéricos
+        const numero = parseFloat(somenteNumeros) / 100; // Divide por 100 para representar centavos
+        return numero.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    };
+
     const cadastrarProduto = () => {
         if (nome === "" || preco === "" || quantidade === "") {
             toast.warn("Por favor, preencha todos os campos!");
             return;
         }
 
-        const precoNumber = parseFloat(preco);
+        const precoNumber = parseFloat(preco) / 100; // Converte o valor para número decimal
         const quantidadeNumber = parseInt(quantidade);
 
         if (isNaN(precoNumber) || isNaN(quantidadeNumber)) {
@@ -71,8 +78,11 @@ export default function CadastrarProduto({ voltarParaLista }: CadastrarProdutoPr
                         id="preco"
                         type="text"
                         placeholder="Digite o preço do produto"
-                        value={preco}
-                        onChange={(e) => setPreco(e.target.value)}
+                        value={formatarPreco(preco)}
+                        onChange={(e) => {
+                            const somenteNumeros = e.target.value.replace(/\D/g, "");
+                            setPreco(somenteNumeros); // Salva apenas os números no estado
+                        }}
                     />
                 </div>
 

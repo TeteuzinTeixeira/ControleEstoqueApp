@@ -24,7 +24,7 @@ export default function AtualizarProduto({ params }: ProductPageProps) {
                 const produto = response.data;
                 setProdutoId(produto.id);
                 setNome(produto.nome);
-                setPreco(produto.preco.toString());
+                setPreco((produto.preco * 100).toString()); // Armazena o valor como centavos
                 setQuantidade(produto.quantidade.toString());
             })
             .catch(() => {
@@ -32,13 +32,20 @@ export default function AtualizarProduto({ params }: ProductPageProps) {
             });
     }, [params.id]);
 
+    const formatarPreco = (valor: string) => {
+        if (!valor) return "R$ 0,00";
+        const somenteNumeros = valor.replace(/\D/g, "");
+        const numero = parseFloat(somenteNumeros) / 100;
+        return numero.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    };
+
     const atualizarProduto = () => {
         if (nome === "" || preco === "" || quantidade === "") {
             toast.warn("Por favor, preencha todos os campos!");
             return;
         }
 
-        const precoNumber = parseFloat(preco);
+        const precoNumber = parseFloat(preco) / 100; // Converte para número decimal
         const quantidadeNumber = parseInt(quantidade);
 
         if (isNaN(precoNumber) || isNaN(quantidadeNumber)) {
@@ -84,8 +91,11 @@ export default function AtualizarProduto({ params }: ProductPageProps) {
                         id="preco"
                         type="text"
                         placeholder="Digite o preço do produto"
-                        value={preco}
-                        onChange={(e) => setPreco(e.target.value)}
+                        value={formatarPreco(preco)}
+                        onChange={(e) => {
+                            const somenteNumeros = e.target.value.replace(/\D/g, ""); // Apenas números
+                            setPreco(somenteNumeros); // Salva apenas os números no estado
+                        }}
                     />
                 </div>
 
